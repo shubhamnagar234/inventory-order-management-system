@@ -11,7 +11,13 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Inventory & Order Management API")
 
-origins = [os.getenv("FRONTEND_URL", "http://localhost:5173")]
+frontend_url = os.getenv("FRONTEND_URL")
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+if frontend_url:
+    origins.append(frontend_url)
 
 # CORS Configuration
 app.add_middleware(
