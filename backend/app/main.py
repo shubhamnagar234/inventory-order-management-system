@@ -22,6 +22,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def home():
+    return {
+        "message": "Inventory Order Management Backend API Running",
+        "docs": "/docs"
+    }
+
+@app.get("/health")
+def health_check():
+    return {
+        'status': "OK",
+        'version': "1.0.0"
+    }
 
 # Product Enpoints
 @app.post(

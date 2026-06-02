@@ -50,78 +50,79 @@ inventory_system/
 │   │   ├── schemas.py     # Pydantic validation schemas
 │   │   └── database.py    # Database connection & session management
 │   ├── requirements.txt   # Python dependencies
-│   └── .env               # Backend environment variables
+│   ├── Dockerfile         # Production Dockerfile
+│   └── .env.example       # Backend environment variables
 ├── frontend/
 │   ├── src/
-│   │   ├── components/    # Reusable UI elements (Layout, Sidebar)
+│   │   ├── components/    # Reusable UI elements
 │   │   ├── pages/         # Dashboard, Products, Customers, Orders
-│   │   ├── services/      # Native fetch API connection layer
-│   │   └── types/         # TypeScript interfaces
-│   ├── vite.config.ts     # Vite & Tailwind v4 configuration
-│   └── package.json       # Node dependencies
-└── docker-compose.yml     # PostgreSQL database orchestration
+│   │   └── services/      # Native fetch API connection layer
+│   ├── Dockerfile         # Multi-stage Nginx Dockerfile
+│   └── .env.example       # Frontend environment variables
+├── docker-compose.yml     # Full-stack orchestration (DB, API, Client)
+└── .env.example           # Root variables for Docker Compose
 ```
 
-## 🚦 Getting Started
+## 🌍 Live Demo & Deployments
 
-Follow these steps to run the application locally on your machine.
+- **Frontend (Vercel):** [https://inventory-order-management-system-sn.vercel.app](https://inventory-order-management-system-sn.vercel.app)
+- **Backend API (Railway):** [https://inventory-order-management-system-sn.up.railway.app/docs](https://inventory-order-management-system-sn.up.railway.app/docs)
+- **Docker Hub Image:** [https://hub.docker.com/r/shubhamnagar234/inventory-backend](https://hub.docker.com/r/shubhamnagar234/inventory-backend)
+
+## 🚦 Quick Start (Docker)
+
+The absolute fastest way to run the entire application (Database, Backend, and Frontend) locally is using Docker.
 
 ### Prerequisites
 
 - **Docker Desktop** installed and running.
-- **Python 3.12+** installed.
-- **Node.js** installed.
-
-### 1. Configure Environment and Start Database
-
-The application relies on a PostgreSQL database hosted via Docker. First, set up your environment variables:
 
 ```bash
-# In the root directory (inventory_system/)
-# Copy the example environment file
+# 1. Copy the example environment file
 cp .env.example .env
 
-# Start the database and services
-docker compose up -d
+# 2. Build and start the entire stack
+docker-compose up -d
+```
+
+Once running:
+
+- **Frontend App:** [http://localhost:5173](http://localhost:5173)
+- **Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+## 💻 Manual Local Development (Without Docker)
+
+If you wish to run the services individually for active development:
+
+### 1. Start Database
+
+Make sure you have `.env` configured, then run:
+
+```bash
+docker-compose up -d db
 ```
 
 ### 2. Run the Backend Server
 
-Open a new terminal to install the Python dependencies and start the FastAPI server.
-
 ```bash
 cd backend
-
-# Create and activate a virtual environment
 python -m venv .venv
 # On Windows: .venv\Scripts\activate
 # On Mac/Linux: source .venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Start the server
 uvicorn app.main:app --reload
-
 ```
-
-> The backend API and interactive Swagger documentation will be available at http://127.0.0.1:8000/docs.
 
 ### 3. Run the Frontend Client
 
-Open a third terminal to install the Node packages and start the React application.
-
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm run dev
 ```
-
-> The Vite server will provide a local URL (typically http://localhost:5173) where you can view the application.
 
 ## 🌐 API Endpoints Overview
 
