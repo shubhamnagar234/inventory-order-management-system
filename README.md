@@ -66,7 +66,7 @@ inventory_system/
 ## 🌍 Live Demo & Deployments
 
 - **Frontend (Vercel):** [https://inventory-order-management-system-sn.vercel.app](https://inventory-order-management-system-sn.vercel.app)
-- **Backend API (Railway):** [https://inventory-order-management-system-sn.up.railway.app/docs](https://inventory-order-management-system-sn.up.railway.app/docs)
+- **Backend API (Railway):** [https://inventory-order-management-system-sn.up.railway.app](https://inventory-order-management-system-sn.up.railway.app)
 - **Docker Hub Image:** [https://hub.docker.com/r/shubhamnagar234/inventory-backend](https://hub.docker.com/r/shubhamnagar234/inventory-backend)
 
 ## 🚦 Quick Start (Docker)
