@@ -17,7 +17,8 @@ origins = [
     "http://127.0.0.1:5173",
 ]
 if frontend_url:
-    origins.append(frontend_url)
+    clean_url = frontend_url.strip().rstrip("/")
+    origins.append(clean_url)
 
 # CORS Configuration
 app.add_middleware(
