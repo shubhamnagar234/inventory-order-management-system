@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { ShoppingCart, Plus, Trash2, X, Loader2, Eye } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { api } from '../services/api';
-import type { Order, Customer, Product } from '../types';
-import ConfirmDialog from '../components/ConfirmDialog';
-import { TableRowSkeleton } from '../components/Skeletons';
-import { useToast } from '../components/ToastContext';
+import { useState, useEffect } from "react";
+import { ShoppingCart, Plus, Trash2, X, Loader2, Eye } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { api } from "../services/api";
+import type { Order, Customer, Product } from "../types";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { TableRowSkeleton } from "../components/Skeletons";
+import { useToast } from "../components/ToastContext";
 
 export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -13,15 +13,15 @@ export default function Orders() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { toast } = useToast();
 
   // Form State
-  const [selectedCustomerId, setSelectedCustomerId] = useState<number | ''>('');
-  const [orderItems, setOrderItems] = useState<{ product_id: number | ''; quantity: number | '' }[]>([
-    { product_id: '', quantity: 1 }
-  ]);
-  
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | "">("");
+  const [orderItems, setOrderItems] = useState<
+    { product_id: number | ""; quantity: number | "" }[]
+  >([{ product_id: "", quantity: 1 }]);
+
   const [viewingOrder, setViewingOrder] = useState<Order | null>(null);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
@@ -30,14 +30,16 @@ export default function Orders() {
       const [ordersData, customersData, productsData] = await Promise.all([
         api.getOrders(),
         api.getCustomers(),
-        api.getProducts()
+        api.getProducts(),
       ]);
       setOrders(ordersData);
       setCustomers(customersData);
       setProducts(productsData);
-      setError('');
+      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
+      setError(
+        err instanceof Error ? err.message : "Failed to load dashboard data",
+      );
     } finally {
       setLoading(false);
     }
@@ -51,16 +53,22 @@ export default function Orders() {
   }, []);
 
   const addOrderItem = () => {
-    setOrderItems([...orderItems, { product_id: '', quantity: 1 }]);
+    setOrderItems([...orderItems, { product_id: "", quantity: 1 }]);
   };
 
   const removeOrderItem = (index: number) => {
     const newItems = [...orderItems];
     newItems.splice(index, 1);
-    setOrderItems(newItems.length ? newItems : [{ product_id: '', quantity: 1 }]);
+    setOrderItems(
+      newItems.length ? newItems : [{ product_id: "", quantity: 1 }],
+    );
   };
 
-  const updateOrderItem = (index: number, field: 'product_id' | 'quantity', value: number | '') => {
+  const updateOrderItem = (
+    index: number,
+    field: "product_id" | "quantity",
+    value: number | "",
+  ) => {
     const newItems = [...orderItems];
     newItems[index][field] = value;
     setOrderItems(newItems);
@@ -69,8 +77,8 @@ export default function Orders() {
   const calculateTotalPreview = () => {
     return orderItems.reduce((total, item) => {
       if (item.product_id && item.quantity) {
-        const product = products.find(p => p.id === item.product_id);
-        if (product) return total + (product.price * (item.quantity as number));
+        const product = products.find((p) => p.id === item.product_id);
+        if (product) return total + product.price * (item.quantity as number);
       }
       return total;
     }, 0);
@@ -83,8 +91,10 @@ export default function Orders() {
       return;
     }
 
-    const validItems = orderItems.filter(item => item.product_id !== '' && item.quantity !== '');
-    
+    const validItems = orderItems.filter(
+      (item) => item.product_id !== "" && item.quantity !== "",
+    );
+
     if (validItems.length === 0) {
       setError("Please add at least one valid product to the order.");
       return;
@@ -94,20 +104,20 @@ export default function Orders() {
     try {
       await api.createOrder({
         customer_id: selectedCustomerId as number,
-        items: validItems.map(item => ({
+        items: validItems.map((item) => ({
           product_id: item.product_id as number,
-          quantity: item.quantity as number
-        }))
+          quantity: item.quantity as number,
+        })),
       });
-      
-      setSelectedCustomerId('');
-      setOrderItems([{ product_id: '', quantity: 1 }]);
-      
+
+      setSelectedCustomerId("");
+      setOrderItems([{ product_id: "", quantity: 1 }]);
+
       loadAllData();
-      setError('');
-      toast('Order created successfully', 'success');
+      setError("");
+      toast("Order created successfully", "success");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create order.');
+      setError(err instanceof Error ? err.message : "Failed to create order.");
     } finally {
       setIsSubmitting(false);
     }
@@ -122,16 +132,16 @@ export default function Orders() {
     try {
       await api.deleteOrder(itemToDelete);
       loadAllData();
-      toast('Order deleted successfully', 'success');
+      toast("Order deleted successfully", "success");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete order');
+      setError(err instanceof Error ? err.message : "Failed to delete order");
     } finally {
       setItemToDelete(null);
     }
   };
 
   const getCustomerName = (id: number) => {
-    return customers.find(c => c.id === id)?.full_name || 'Unknown Customer';
+    return customers.find((c) => c.id === id)?.full_name || "Unknown Customer";
   };
 
   return (
@@ -140,7 +150,9 @@ export default function Orders() {
         <div className="p-3 bg-emerald-100 text-emerald-600 rounded-lg">
           <ShoppingCart size={24} />
         </div>
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Order Management</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+          Order Management
+        </h1>
       </div>
 
       {error && (
@@ -151,38 +163,55 @@ export default function Orders() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Create New Order</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Create New Order
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Select Customer</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Select Customer
+              </label>
               <select
                 required
                 value={selectedCustomerId}
-                onChange={(e) => setSelectedCustomerId(e.target.value === '' ? '' : Number(e.target.value))}
+                onChange={(e) =>
+                  setSelectedCustomerId(
+                    e.target.value === "" ? "" : Number(e.target.value),
+                  )
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               >
                 <option value="">-- Choose a customer --</option>
-                {customers.map(c => (
-                  <option key={c.id} value={c.id}>{c.full_name} ({c.email})</option>
+                {customers.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.full_name} ({c.email})
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className="pt-4 border-t border-gray-100 space-y-3">
-              <label className="block text-sm font-medium text-gray-700">Order Items</label>
-              
+              <label className="block text-sm font-medium text-gray-700">
+                Order Items
+              </label>
+
               {orderItems.map((item, index) => (
                 <div key={index} className="flex gap-2 items-start">
                   <div className="flex-1">
                     <select
                       required
                       value={item.product_id}
-                      onChange={(e) => updateOrderItem(index, 'product_id', e.target.value === '' ? '' : Number(e.target.value))}
+                      onChange={(e) =>
+                        updateOrderItem(
+                          index,
+                          "product_id",
+                          e.target.value === "" ? "" : Number(e.target.value),
+                        )
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
                     >
                       <option value="">-- Product --</option>
-                      {products.map(p => (
+                      {products.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name} (₹{p.price}) - {p.quantity_in_stock} left
                         </option>
@@ -195,7 +224,13 @@ export default function Orders() {
                       required
                       min="1"
                       value={item.quantity}
-                      onChange={(e) => updateOrderItem(index, 'quantity', e.target.value === '' ? '' : Number(e.target.value))}
+                      onChange={(e) =>
+                        updateOrderItem(
+                          index,
+                          "quantity",
+                          e.target.value === "" ? "" : Number(e.target.value),
+                        )
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
                       placeholder="Qty"
                     />
@@ -220,8 +255,12 @@ export default function Orders() {
             </div>
 
             <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
-              <span className="text-gray-600 font-medium">Estimated Total:</span>
-              <span className="text-xl font-bold text-gray-900">₹{calculateTotalPreview().toFixed(2)}</span>
+              <span className="text-gray-600 font-medium">
+                Estimated Total:
+              </span>
+              <span className="text-xl font-bold text-gray-900">
+                ₹{calculateTotalPreview().toFixed(2)}
+              </span>
             </div>
 
             <button
@@ -261,13 +300,15 @@ export default function Orders() {
                   <TableRowSkeleton columns={6} />
                 ) : orders.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-gray-500">No orders found. Create your first order!</td>
+                    <td colSpan={6} className="p-8 text-center text-gray-500">
+                      No orders found. Create your first order!
+                    </td>
                   </tr>
                 ) : (
                   <AnimatePresence>
                     {orders.map((order, index) => (
-                      <motion.tr 
-                        key={order.id} 
+                      <motion.tr
+                        key={order.id}
                         layout
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -275,13 +316,23 @@ export default function Orders() {
                         transition={{ duration: 0.2, delay: index * 0.05 }}
                         className="hover:bg-gray-50 transition-colors"
                       >
-                        <td className="p-3 sm:p-4 font-medium text-gray-900">#{order.id}</td>
-                        <td className="p-3 sm:p-4 text-gray-900">{getCustomerName(order.customer_id)}</td>
-                        <td className="p-3 sm:p-4 text-gray-600">
-                          {new Date(order.created_at).toLocaleDateString()}
+                        <td className="p-3 sm:p-4 font-medium text-gray-900">
+                          #{order.id}
+                        </td>
+                        <td className="p-3 sm:p-4 text-gray-900">
+                          {getCustomerName(order.customer_id)}
                         </td>
                         <td className="p-3 sm:p-4 text-gray-600">
-                          {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+                          {new Date(order.created_at + "Z").toLocaleString(
+                            "en-IN",
+                            {
+                              timeZone: "Asia/Kolkata",
+                            },
+                          )}
+                        </td>
+                        <td className="p-3 sm:p-4 text-gray-600">
+                          {order.items.length}{" "}
+                          {order.items.length === 1 ? "item" : "items"}
                         </td>
                         <td className="p-3 sm:p-4 font-medium text-gray-900">
                           ₹{order.total_amount.toFixed(2)}
@@ -337,16 +388,25 @@ export default function Orders() {
                 <X size={20} />
               </button>
             </div>
-            
+
             <div className="p-4 sm:p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-gray-500 mb-1">Customer</p>
-                  <p className="font-medium text-gray-900">{getCustomerName(viewingOrder.customer_id)}</p>
+                  <p className="font-medium text-gray-900">
+                    {getCustomerName(viewingOrder.customer_id)}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-500 mb-1">Date Placed</p>
-                  <p className="font-medium text-gray-900">{new Date(viewingOrder.created_at).toLocaleString()}</p>
+                  <p className="font-medium text-gray-900">
+                    {new Date(viewingOrder.created_at + "Z").toLocaleString(
+                      "en-IN",
+                      {
+                        timeZone: "Asia/Kolkata",
+                      },
+                    )}
+                  </p>
                 </div>
               </div>
 
@@ -362,17 +422,26 @@ export default function Orders() {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {viewingOrder.items.map((item, idx) => {
-                      const product = products.find(p => p.id === item.product_id);
+                      const product = products.find(
+                        (p) => p.id === item.product_id,
+                      );
                       const price = product?.price || 0;
                       const subtotal = price * item.quantity;
                       return (
                         <tr key={idx} className="hover:bg-gray-50/50">
                           <td className="p-3 text-gray-900 font-medium">
-                            {product?.name || `Unknown Product #${item.product_id}`}
+                            {product?.name ||
+                              `Unknown Product #${item.product_id}`}
                           </td>
-                          <td className="p-3 text-gray-600 text-center">{item.quantity}</td>
-                          <td className="p-3 text-gray-600 text-right">₹{price.toFixed(2)}</td>
-                          <td className="p-3 text-gray-900 font-medium text-right">₹{subtotal.toFixed(2)}</td>
+                          <td className="p-3 text-gray-600 text-center">
+                            {item.quantity}
+                          </td>
+                          <td className="p-3 text-gray-600 text-right">
+                            ₹{price.toFixed(2)}
+                          </td>
+                          <td className="p-3 text-gray-900 font-medium text-right">
+                            ₹{subtotal.toFixed(2)}
+                          </td>
                         </tr>
                       );
                     })}
@@ -382,10 +451,12 @@ export default function Orders() {
 
               <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                 <span className="text-gray-600 font-medium">Total Amount:</span>
-                <span className="text-2xl font-bold text-gray-900">₹{viewingOrder.total_amount.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-gray-900">
+                  ₹{viewingOrder.total_amount.toFixed(2)}
+                </span>
               </div>
             </div>
-            
+
             <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
               <button
                 onClick={() => setViewingOrder(null)}
