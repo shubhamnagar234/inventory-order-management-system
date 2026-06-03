@@ -184,7 +184,7 @@ export default function Orders() {
                       <option value="">-- Product --</option>
                       {products.map(p => (
                         <option key={p.id} value={p.id}>
-                          {p.name} (${p.price}) - {p.quantity_in_stock} left
+                          {p.name} (₹{p.price}) - {p.quantity_in_stock} left
                         </option>
                       ))}
                     </select>
@@ -221,7 +221,7 @@ export default function Orders() {
 
             <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
               <span className="text-gray-600 font-medium">Estimated Total:</span>
-              <span className="text-xl font-bold text-gray-900">${calculateTotalPreview().toFixed(2)}</span>
+              <span className="text-xl font-bold text-gray-900">₹{calculateTotalPreview().toFixed(2)}</span>
             </div>
 
             <button
@@ -284,7 +284,7 @@ export default function Orders() {
                           {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
                         </td>
                         <td className="p-3 sm:p-4 font-medium text-gray-900">
-                          ${order.total_amount.toFixed(2)}
+                          ₹{order.total_amount.toFixed(2)}
                         </td>
                         <td className="p-3 sm:p-4 text-right">
                           <div className="flex justify-end gap-2">
@@ -371,8 +371,8 @@ export default function Orders() {
                             {product?.name || `Unknown Product #${item.product_id}`}
                           </td>
                           <td className="p-3 text-gray-600 text-center">{item.quantity}</td>
-                          <td className="p-3 text-gray-600 text-right">${price.toFixed(2)}</td>
-                          <td className="p-3 text-gray-900 font-medium text-right">${subtotal.toFixed(2)}</td>
+                          <td className="p-3 text-gray-600 text-right">₹{price.toFixed(2)}</td>
+                          <td className="p-3 text-gray-900 font-medium text-right">₹{subtotal.toFixed(2)}</td>
                         </tr>
                       );
                     })}
@@ -382,7 +382,7 @@ export default function Orders() {
 
               <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                 <span className="text-gray-600 font-medium">Total Amount:</span>
-                <span className="text-2xl font-bold text-gray-900">${viewingOrder.total_amount.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-gray-900">₹{viewingOrder.total_amount.toFixed(2)}</span>
               </div>
             </div>
             

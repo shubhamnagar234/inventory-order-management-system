@@ -171,7 +171,7 @@ export default function Dashboard() {
                       </p>
                     </div>
                     <span className="font-bold text-gray-900">
-                      ${order.total_amount.toFixed(2)}
+                      ₹{order.total_amount.toFixed(2)}
                     </span>
                   </div>
                 ))}
